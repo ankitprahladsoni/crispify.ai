@@ -37,16 +37,18 @@ const App = () => {
   }
 
   return (
-    <Grid container spacing={2} justify="center">
-      <div className="App">
-        <Grid item sm={12}>
+    <>
+      <Grid container spacing={2} justify="center">
+        <Grid item xs={3} justify="center" alignItems="center">
           <FileUploader onChange={uploadFiles} />
         </Grid>
-        <Grid item sm={12}>
+      </Grid>
+      <Grid container spacing={2} justify="center" alignItems="center">
+        <Grid item sm={6} justify="center" alignItems="center">
           {imageComponent}
         </Grid>
-      </div>
-    </Grid>
+      </Grid>
+    </>
   );
 };
 

@@ -23,9 +23,10 @@ const FileUploader = (props: FileUploadedProps) => {
   }
   return (
     <>
-      <Button onClick={handleOpen}>Add Image</Button>
+      <div>
+        <Button onClick={handleOpen}>Click here to add an image</Button>
+      </div>
       <DropzoneDialog
-        {...props}
         showPreviewsInDropzone={false}
         filesLimit={1}
         open={open}
