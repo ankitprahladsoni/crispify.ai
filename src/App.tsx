@@ -1,33 +1,52 @@
-import React, { useState, Component } from 'react';
+import React, { useState } from 'react';
 
 import './App.css';
 import FileUploader from './FileUploader';
 import FileComparer from './FileComparer';
+import { Box, Grid, CircularProgress } from '@material-ui/core';
 
 const App = () => {
-  const [files, setFiles] = useState<File[]>([]);
-  function uploadFiles(uploadedFile: File[]) {
-    setFiles(prvFiles => [...prvFiles, ...uploadedFile]);
+  const [files, setFiles] = useState<string[]>([]);
+  const [completed, setCompleted] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
+
+  async function uploadFiles(uploadedFile: File[]) {
+    setCompleted(false);
+    setUploaded(true);
+    await fetch('http://34.73.19.123:5000/clear');
+    let data = new FormData();
+    data.append('file', uploadedFile[0]);
+    let response = await fetch('http://34.73.19.123:5000/', {
+      method: 'POST',
+      body: data,
+    });
+    let body = await response.blob();
+    setFiles([URL.createObjectURL(uploadedFile[0]), URL.createObjectURL(body)]);
+    setCompleted(true);
   }
 
-  let leftImage =
-    'https://media.gettyimages.com/photos/happy-dog-picture-id182176638?s=2048x2048';
-  let rightImage =
-    'https://media.gettyimages.com/photos/chocolate-labrador-puppy-sitting-in-large-dog-bowl-5-weeks-old-picture-id866757708?s=2048x2048';
+  let imageComponent;
 
-  if (files.length > 0) {
-    let file: File = files[0];
-    let something: string = URL.createObjectURL(file);
-
-    leftImage = something;
-    rightImage = leftImage;
+  if (uploaded && !completed) {
+    imageComponent = <CircularProgress />;
+  } else if (uploaded && completed) {
+    let [leftImage, rightImage] = files;
+    imageComponent = (
+      <FileComparer leftImage={leftImage} rightImage={rightImage} />
+    );
   }
 
   return (
-    <div className="App">
-      <FileUploader onChange={uploadFiles} />
-      <FileComparer leftImage={leftImage} rightImage={rightImage} />
-    </div>
+    <Grid container spacing={2} justify="center">
+      <div className="App">
+        <Grid item sm={12}>
+          <FileUploader onChange={uploadFiles} />
+        </Grid>
+        <Grid item sm={12}>
+          {imageComponent}
+        </Grid>
+      </div>
+    </Grid>
   );
 };
 
