@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { DropzoneArea } from 'material-ui-dropzone';
 
-const FileUploader = () => {
-  const [files, setFiles] = useState({});
+interface FileUploadedProps {
+  onChange: (uploadedFile: File[]) => void;
+}
 
-  function uploadFiles(uploadedFile: any) {
-    setFiles({
-      files: uploadedFile,
-    });
-  }
-  return <DropzoneArea onChange={uploadFiles} />;
+const FileUploader = (props: FileUploadedProps) => {
+  return <DropzoneArea {...props} />;
 };
 
 export default FileUploader;
